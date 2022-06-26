@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +21,7 @@ public class Chrono extends JFrame{
 	JButton[] tab_button = new JButton[tab_string.length];					//Creation d'un element pour chaque label
 	private JLabel[] screen = new JLabel[4];								//distribution du labels dans le container, 1 pour le chrono et 3 pour les 3 laps
 	private Dimension dimButton = new Dimension(90,70);						//stocke la dimmension des buttons
-	private int lap = 0;													//permet de savoir combien de fois le button lap a ete actionné
+	private int Lap = 0;													//permet de savoir combien de fois le button lap a ete actionné
 	long initVar, nowVar, pauseDepart = 0, pauseFin = 0;					//variables qui vont permettre de calculer le temps et simuler le chrono
 	long hour, minute, second, mili;										//variables qui vont permettre de formatter le timestamp en hh:mm:ss.mili
 	private SwingWorker<Void, Integer> worker;								//SwingWorker va permettre de lancer le chrono en Background pour ne pas bloquer l'application
@@ -99,7 +101,94 @@ public class Chrono extends JFrame{
 		container.add(buttons, BorderLayout.CENTER);
 	}
 	
+	private void initializeWorker() {
+		worker = new SwingWorker<Void, Integer>() {
+			protected Void doInBackground() throws Exception {
+				
+				initVar = initVar + (pauseFin - pauseDepart);
+				pauseDepart = pauseFin = 0;
+				
+				while (!isCancelled()) {
+					nowVar = System.currentTimeMillis() - initVar;
+					nowVar /= 10;
+					mili = nowVar % 100;
+					second = nowVar / 100;
+					minute = second / 60;
+					second = second % 60;
+					hour = minute / 60;
+					minute = minute % 60;
+					screen[0].setText(String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
+					screen[0].paintImmediately(screen[0].getVisibleRect());
+				}
+				return null;
+			}
+		};		
+	}
 	
+	//Listener affecté au boutton Start
+	class StartListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			initVar = System.currentTimeMillis();
+			initializeWorker();
+			worker.execute();
+			tab_button[0].setEnabled(false);
+			tab_button[1].setEnabled(true);
+			tab_button[2].setEnabled(true);
+			tab_button[4].setEnabled(true);
+		}
+	}
+	
+	//Listener affecté au button Lap
+	class LapListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			if(Lap == 3) {
+				tab_button[1].setEnabled(false);
+				screen[Lap].setText(Lap + " : " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
+				screen[Lap].paintImmediately(screen[Lap].getVisibleRect());
+				Lap++;				
+			}
+		}		
+	}
+	
+	//Listener affecté au button Stop
+	class StopListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			worker.cancel(true);
+			pauseDepart = System.currentTimeMillis();
+			tab_button[2].setEnabled(false);
+			tab_button[3].setEnabled(true);
+		}
+	}
+	
+	//Listener affecté au button Resume
+	class ResumeListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			pauseFin = System.currentTimeMillis();
+			initializeWorker();
+			worker.execute();
+			tab_button[2].setEnabled(true);
+			tab_button[3].setEnabled(false);
+		}
+	}
+	
+	//Listener affecté au button Reset
+	class ResetListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			worker.cancel(true);
+			hour = minute = second = mili = pauseDepart = pauseFin = 0;
+			Lap = 1;
+			for(int i = 0; i < 4; i++) {
+				if(i == 0) {
+					screen[i].setText("00:00:00.00");
+				} else {
+					screen[i].setText(i + "00:00:00.00");
+				}
+				tab_button[i].setEnabled(false);
+			}
+			tab_button[0].setEnabled(true);
+			tab_button[4].setEnabled(false);
+		}
+	}
 }
 
 
