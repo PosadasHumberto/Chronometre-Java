@@ -21,7 +21,7 @@ public class Chrono extends JFrame{
 	JButton[] tab_button = new JButton[tab_string.length];					//Creation d'un element pour chaque label
 	private JLabel[] screen = new JLabel[4];								//distribution du labels dans le container, 1 pour le chrono et 3 pour les 3 laps
 	private Dimension dimButton = new Dimension(90,70);						//stocke la dimmension des buttons
-	private int Lap = 0;													//permet de savoir combien de fois le button lap a ete actionné
+	private int Lap = 1;													//permet de savoir combien de fois le button lap a ete actionné
 	long initVar, nowVar, pauseDepart = 0, pauseFin = 0;					//variables qui vont permettre de calculer le temps et simuler le chrono
 	long hour, minute, second, mili;										//variables qui vont permettre de formatter le timestamp en hh:mm:ss.mili
 	private SwingWorker<Void, Integer> worker;								//SwingWorker va permettre de lancer le chrono en Background pour ne pas bloquer l'application
@@ -181,7 +181,7 @@ public class Chrono extends JFrame{
 				if(i == 0) {
 					screen[i].setText("00:00:00.00");
 				} else {
-					screen[i].setText(i + "00:00:00.00");
+					screen[i].setText(i + ".- 00:00:00.00");
 				}
 				tab_button[i].setEnabled(false);
 			}
