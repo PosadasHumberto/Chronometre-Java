@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,20 +27,21 @@ public class Chrono extends JFrame{
 	
 	//Constructor
 	public Chrono() {
-		this.setSize(350, 435);
+		this.setSize(700, 870);
 		this.setTitle("Chronometre");
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);				//permet de fermer la fenetre en cliqant sur x
+		this.setLocationRelativeTo(null);									//ne pas positioner la fenetre par rapport au coin superieur gauche
+		this.setResizable(false);											//ne pas rendre la fenetre redimensionable
 
 		//initialiser le conteneur avec tous les composants
-		initComposant();
+		initComposant();													//appel a la fonction de mise en place des elements dans la fenetre
 		
 		//Rajout du composant a la fenetre
-		this.setContentPane(container);
+		this.setContentPane(container);										
 		this.setVisible(true);
 	}
 	
+	//fonction qui permet de positionner les elements dans la fenetre
 	private void initComposant() {
 		//definir les 2 sous conteneurs
 		JPanel buttons = new JPanel();											//premier sous-conteneur
@@ -61,7 +61,7 @@ public class Chrono extends JFrame{
 				screen[i] = new JLabel("00:00:00.00");
 				screen[i].setFont(police);
 			} else {
-				screen[i] = new JLabel("00:00:00.00");
+				screen[i] = new JLabel(i + " : 00:00:00.00");
 				screen[i].setFont(police2);
 			}
 			
@@ -73,11 +73,12 @@ public class Chrono extends JFrame{
 		
 		//parcourir le tableau initialisé afin de créer nos boutons avec le texte, dimension et on les ajoute au sous conteneur
 		for(int i = 0; i < tab_string.length; i++) {
-			tab_button[i] = new JButton(tab_string[i]);
-			tab_button[i].setPreferredSize(dimButton);
+			tab_button[i] = new JButton(tab_string[i]);				//creation de 5 buttons
+			tab_button[i].setPreferredSize(dimButton);				
 			buttons.add(tab_button[i]);
-			if (i != 0)
-				tab_button[i].setEnabled(false);
+			if (i != 0) {
+				tab_button[i].setEnabled(false);					//au debut seulement le tab_button[0] est le seul button active
+			}
 		}
 		
 		//definir pour chaque button l'Action Listener correspondant et son couleur
@@ -142,11 +143,12 @@ public class Chrono extends JFrame{
 	class LapListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if(Lap == 3) {
-				tab_button[1].setEnabled(false);
-				screen[Lap].setText(Lap + " : " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
-				screen[Lap].paintImmediately(screen[Lap].getVisibleRect());
-				Lap++;				
+				tab_button[1].setEnabled(false);			//si les 3 laps ont deja ete utilisés, le button lap est desactivé
 			}
+			screen[Lap].setText(Lap + " : " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
+			screen[Lap].paintImmediately(screen[Lap].getVisibleRect());
+			Lap++;				
+			
 		}		
 	}
 	
@@ -181,7 +183,7 @@ public class Chrono extends JFrame{
 				if(i == 0) {
 					screen[i].setText("00:00:00.00");
 				} else {
-					screen[i].setText(i + ".- 00:00:00.00");
+					screen[i].setText(i + " : 00:00:00.00");
 				}
 				tab_button[i].setEnabled(false);
 			}
@@ -190,27 +192,3 @@ public class Chrono extends JFrame{
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
