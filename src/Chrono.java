@@ -20,7 +20,7 @@ public class Chrono extends JFrame{
 	JButton[] tab_button = new JButton[tab_string.length];					//Creation d'un element pour chaque label
 	private JLabel[] screen = new JLabel[4];								//distribution du labels dans le container, 1 pour le chrono et 3 pour les 3 laps
 	private Dimension dimButton = new Dimension(90,70);						//stocke la dimmension des buttons
-	private int Lap = 1;													//permet de savoir combien de fois le button lap a ete actionné
+	private int Lap = 1;													//permet de savoir combien de fois le button lap a ete actionnï¿½
 	long initVar, nowVar, pauseDepart = 0, pauseFin = 0;					//variables qui vont permettre de calculer le temps et simuler le chrono
 	long hour, minute, second, mili;										//variables qui vont permettre de formatter le timestamp en hh:mm:ss.mili
 	private SwingWorker<Void, Integer> worker;								//SwingWorker va permettre de lancer le chrono en Background pour ne pas bloquer l'application
@@ -71,7 +71,7 @@ public class Chrono extends JFrame{
 			panScreen.add(screen[i]);
 		}
 		
-		//parcourir le tableau initialisé afin de créer nos boutons avec le texte, dimension et on les ajoute au sous conteneur
+		//parcourir le tableau initialisï¿½ afin de crï¿½er nos boutons avec le texte, dimension et on les ajoute au sous conteneur
 		for(int i = 0; i < tab_string.length; i++) {
 			tab_button[i] = new JButton(tab_string[i]);				//creation de 5 buttons
 			tab_button[i].setPreferredSize(dimButton);				
@@ -119,14 +119,14 @@ public class Chrono extends JFrame{
 					hour = minute / 60;
 					minute = minute % 60;
 					screen[0].setText(String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
-					screen[0].paintImmediately(screen[0].getVisibleRect());
+					//screen[0].paintImmediately(screen[0].getVisibleRect());
 				}
 				return null;
 			}
 		};		
 	}
 	
-	//Listener affecté au boutton Start
+	//Listener affectï¿½ au boutton Start
 	class StartListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			initVar = System.currentTimeMillis();
@@ -139,11 +139,11 @@ public class Chrono extends JFrame{
 		}
 	}
 	
-	//Listener affecté au button Lap
+	//Listener affectï¿½ au button Lap
 	class LapListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			if(Lap == 3) {
-				tab_button[1].setEnabled(false);			//si les 3 laps ont deja ete utilisés, le button lap est desactivé
+				tab_button[1].setEnabled(false);			//si les 3 laps ont deja ete utilisï¿½s, le button lap est desactivï¿½
 			}
 			screen[Lap].setText(Lap + " : " + String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second) + "." + String.format("%02d", mili));
 			screen[Lap].paintImmediately(screen[Lap].getVisibleRect());
@@ -152,7 +152,7 @@ public class Chrono extends JFrame{
 		}		
 	}
 	
-	//Listener affecté au button Stop
+	//Listener affectï¿½ au button Stop
 	class StopListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			worker.cancel(true);
@@ -162,7 +162,7 @@ public class Chrono extends JFrame{
 		}
 	}
 	
-	//Listener affecté au button Resume
+	//Listener affectï¿½ au button Resume
 	class ResumeListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			pauseFin = System.currentTimeMillis();
@@ -173,7 +173,7 @@ public class Chrono extends JFrame{
 		}
 	}
 	
-	//Listener affecté au button Reset
+	//Listener affectï¿½ au button Reset
 	class ResetListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			worker.cancel(true);
